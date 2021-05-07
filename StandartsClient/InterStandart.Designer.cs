@@ -1,7 +1,7 @@
 ﻿
 namespace StandartsClient
 {
-    partial class Form1
+    partial class InterStandart
     {
         /// <summary>
         /// Required designer variable.
@@ -29,13 +29,19 @@ namespace StandartsClient
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.SuspendLayout();
+            // 
+            // InterStandart
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "Form1";
+            this.Name = "InterStandart";
+            this.Text = "Международные стандарты";
+            this.ResumeLayout(false);
+
         }
 
         #endregion
     }
 }
-
