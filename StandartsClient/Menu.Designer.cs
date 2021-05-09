@@ -108,6 +108,7 @@ namespace StandartsClient
             this.Controls.Add(this.pictureBox1);
             this.Name = "Menu";
             this.Text = "Меню";
+            this.Load += new System.EventHandler(this.Menu_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 

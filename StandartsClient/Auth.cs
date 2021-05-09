@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StandartsClient.Services;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,9 +13,11 @@ namespace StandartsClient
 {
     public partial class Auth : Form
     {
+        private readonly StandartService standartService;
         public Auth()
         {
             InitializeComponent();
+            this.standartService = new StandartService();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -22,7 +25,12 @@ namespace StandartsClient
 
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private async void Form1_Load(object sender, EventArgs e)
+        {
+            Standarts.Items = await standartService.GetStandarts();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
         {
 
         }

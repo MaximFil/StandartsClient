@@ -38,6 +38,7 @@ namespace StandartsClient
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Name = "BelStandart";
             this.Text = "Белорусские стандарты";
+            this.Load += new System.EventHandler(this.BelStandart_Load);
             this.ResumeLayout(false);
 
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StandartsClient.Services;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,9 +13,11 @@ namespace StandartsClient
 {
     public partial class Menu : Form
     {
+        private readonly StandartService standartService;
         public Menu()
         {
             InitializeComponent();
+            this.standartService = new StandartService();
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -24,7 +27,7 @@ namespace StandartsClient
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var belForm = new BelStandart();
+            var belForm = new BelStandart(1);
             belForm.Show();
             this.Close();
         }
@@ -41,6 +44,11 @@ namespace StandartsClient
             var interForm = new InterStandart();
             interForm.Show();
             this.Close();
+        }
+
+        private async void Menu_Load(object sender, EventArgs e)
+        {
+            StandartTypes.Items = await standartService.GetStandartTypes();
         }
     }
 }
