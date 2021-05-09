@@ -46,7 +46,7 @@ namespace StandartsClient
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(200, 39);
             this.button1.TabIndex = 0;
-            this.button1.Text = "button1";
+            this.button1.Text = "Войти";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -77,22 +77,25 @@ namespace StandartsClient
             this.label3.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(234, 205);
+            this.label3.Location = new System.Drawing.Point(182, 205);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(46, 18);
+            this.label3.Size = new System.Drawing.Size(174, 18);
             this.label3.TabIndex = 3;
-            this.label3.Text = "label3";
+            this.label3.Text = "Создать новый аккаунт";
+            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // label4
             // 
             this.label4.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.ForeColor = System.Drawing.Color.Red;
             this.label4.Location = new System.Drawing.Point(362, 150);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(11, 16);
+            this.label4.Size = new System.Drawing.Size(114, 16);
             this.label4.TabIndex = 4;
-            this.label4.Text = "l";
+            this.label4.Text = "Уже существует";
+            this.label4.Visible = false;
             // 
             // textBox1
             // 
@@ -112,6 +115,7 @@ namespace StandartsClient
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(171, 26);
             this.textBox2.TabIndex = 6;
+            this.textBox2.UseSystemPasswordChar = true;
             // 
             // Auth
             // 

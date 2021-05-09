@@ -6,7 +6,14 @@ using System.Threading.Tasks;
 
 namespace StandartsClient.Models
 {
-    class FavoriteStandart
+    public class FavoriteStandart
     {
+        public int StandartId { get; set; }
+
+        public string StandartTypeName { get; set; }
+
+        public string StandartHeader { get; set; }
+
+        public string StandartDetails { get; set; }
     }
 }

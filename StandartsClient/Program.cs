@@ -16,7 +16,7 @@ namespace StandartsClient
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new BelStandart(8));
+            Application.Run(new Auth());
         }
     }
 }

@@ -47,6 +47,7 @@ namespace StandartsClient
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // button1
             // 
@@ -108,7 +109,7 @@ namespace StandartsClient
             this.Controls.Add(this.pictureBox1);
             this.Name = "Menu";
             this.Text = "Меню";
-            this.Load += new System.EventHandler(this.Menu_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Menu_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 

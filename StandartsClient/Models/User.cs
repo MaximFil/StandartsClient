@@ -6,14 +6,12 @@ using System.Threading.Tasks;
 
 namespace StandartsClient.Models
 {
-    public class StandartType
+    public class User
     {
         public int Id { get; set; }
 
-        public string StandartTypeName { get; set; }
+        public string Login { get; set; }
 
-        public string Discription { get; set; }
-
-        public string Abbr { get; set; }
+        public string Password { get; set; }
     }
 }

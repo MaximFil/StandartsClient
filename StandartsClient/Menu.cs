@@ -14,6 +14,8 @@ namespace StandartsClient
     public partial class Menu : Form
     {
         private readonly StandartService standartService;
+
+        private bool dispose = true;
         public Menu()
         {
             InitializeComponent();
@@ -27,28 +29,39 @@ namespace StandartsClient
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var belForm = new BelStandart(1);
-            belForm.Show();
+            dispose = false;
+            var form = new StandartsForm(StandartTypesEnum.Bel);
+            form.Show();
             this.Close();
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            var rusForm = new RusStandart();
-            rusForm.Show();
+            var belForm = new StandartsForm(StandartTypesEnum.Rus);
+            belForm.Show();
             this.Close();
         }
 
         private void button6_Click(object sender, EventArgs e)
         {
-            var interForm = new InterStandart();
-            interForm.Show();
+            var belForm = new StandartsForm(StandartTypesEnum.Inter);
+            belForm.Show();
             this.Close();
         }
 
-        private async void Menu_Load(object sender, EventArgs e)
+        private void Menu_FormClosing(object sender, FormClosingEventArgs e)
         {
-            StandartTypes.Items = await standartService.GetStandartTypes();
+            if (dispose)
+            {
+                //Application.Exit();
+            }
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            var user = new User();
+            user.Show();
+            this.Close();
         }
     }
 }
