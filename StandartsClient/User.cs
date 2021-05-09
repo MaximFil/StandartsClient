@@ -12,11 +12,12 @@ using System.Windows.Forms;
 
 namespace StandartsClient
 {
-    public partial class User : Form
+    public partial class User : Form, ISearch
     {
         private readonly StandartService standartService;
 
         private Dictionary<string, List<FavoriteStandart>> FavoriteStandarts { get; set; }
+        private Dictionary<string, List<FavoriteStandart>> ResultSearchFavoriteStandarts { get; set; }
         private LinkedList<DisplayStandartModel> DisplayStandartModel { get; set; }
 
         public User()
@@ -35,7 +36,7 @@ namespace StandartsClient
                 var addTypeName = true;
                 foreach(var item in standart.Value)
                 {
-                    linkedListNode = DisplayStandartModel.AddLast(new DisplayStandartModel(new Standart { Id = item.StandartId, Details = item.StandartDetails, Header = item.StandartHeader}, panel1, true, linkedListNode?.Value, true, addTypeName, item.StandartTypeName));
+                    linkedListNode = DisplayStandartModel.AddLast(new DisplayStandartModel(new Standart { Id = item.StandartId, Details = item.StandartDetails, Header = item.StandartHeader}, panel1, true, linkedListNode?.Value, true, addTypeName, item.StandartTypeName, search: this));
                     addTypeName = false;
                 }
             }
@@ -48,8 +49,24 @@ namespace StandartsClient
             {
                 var width = panel1.Width;
                 var height = panel1.Height;
-                linkedListNode?.Value?.ChangeFormSize(width, height, linkedListNode?.Previous?.Value);
+                //linkedListNode?.Value?.ChangeFormSize(width, height, linkedListNode?.Previous?.Value);
                 linkedListNode = linkedListNode?.Next;
+            }
+        }
+
+        public void Search(string findText)
+        {
+            panel1.Controls.Clear();
+            this.ResultSearchFavoriteStandarts = FavoriteStandarts.SelectMany(s => s.Value).Where(s => s.StandartHeader.IndexOf(findText, StringComparison.InvariantCultureIgnoreCase) >= 0).GroupBy(s => s.StandartTypeName).ToDictionary(s => s.Key, s => s.ToList());
+            LinkedListNode<DisplayStandartModel> linkedListNode = null;
+            foreach (var standart in ResultSearchFavoriteStandarts)
+            {
+                var addTypeName = true;
+                foreach (var item in standart.Value)
+                {
+                    linkedListNode = DisplayStandartModel.AddLast(new DisplayStandartModel(new Standart { Id = item.StandartId, Details = item.StandartDetails, Header = item.StandartHeader }, panel1, true, linkedListNode?.Value, true, addTypeName, item.StandartTypeName, search: this, findPattern: findText));
+                    addTypeName = false;
+                }
             }
         }
     }
