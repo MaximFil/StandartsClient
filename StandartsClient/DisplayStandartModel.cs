@@ -11,7 +11,9 @@ namespace StandartsClient
 {
     public class DisplayStandartModel
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
+
+        public Label UserName { get; set; }
 
         public Label FindText { get; set; }
 
@@ -19,7 +21,9 @@ namespace StandartsClient
 
         public Button FindButton { get; set; }
 
-        public Label UserName { get; set; }
+        public Button ClearResultSearch { get; set; }
+
+        public Label EmptyResult { get; set; }
 
         public Label TypeName { get; set; }
 
@@ -49,7 +53,7 @@ namespace StandartsClient
         public DisplayStandartModel(Standart standart, Panel panel, bool isAddedToFavorite, DisplayStandartModel displayStandartModel = null, bool isUserForm = false, bool addTypeName = false, string typeName = "", string findPattern = "", ISearch search = null)
         {
             this.Standart = standart;
-            this.Id = standart.Id;
+            this.Id = standart?.Id;
             this.userService = new UserService();
             this.IsAddedToFavorite = isAddedToFavorite;
             this.IsAddedTypeName = addTypeName;
@@ -57,8 +61,8 @@ namespace StandartsClient
             this.MaximumWidth = Screen.PrimaryScreen.Bounds.Width;
             this.Panel = panel;
             this.Search = search;
+            this.FindPattern = findPattern;
             DisplayStandartToForm(panel, displayStandartModel, isUserForm);
-            AddToFavorite.Click += new EventHandler(this.AddStandartToFavorite);
         }
 
         public void DisplayStandartToForm(Panel panel, DisplayStandartModel standartModel = null, bool isUserForm = false)
@@ -70,19 +74,19 @@ namespace StandartsClient
             InitializeLabelFindText(panel);
             InitializeTextboxFindText(panel);
             InitializeFindButton(panel);
-            InitializeLabelTypeName(panel, standartModel);
-            InitializeLabelHeader(panel, standartModel);
-            InitializeCheckBoxAddToFavorite(panel);
-            //InitializeLabelDisplayDetails(panel);
-            InitializeLabelDetails(panel);
-        }
-
-        public void ChangeFormSize(int panelWidth, int panelHeight, DisplayStandartModel standartModel = null)
-        {
-            ResizeLabelHeader(panelWidth, panelWidth, standartModel);
-            ResizeCheckBoxAddToFavorite(panelWidth, panelHeight);
-            //ResizeLabelDisplayDetails(panel);
-            ResizeLabelDetails(panelWidth, panelHeight);
+            InitializeClearResultSearchButton(panel);
+            if(Standart == null)
+            {
+                InitializeLabelEmptyResult(panel);
+            }
+            if(this.Standart != null)
+            {
+                InitializeLabelTypeName(panel, standartModel);
+                InitializeLabelHeader(panel, standartModel);
+                InitializeCheckBoxAddToFavorite(panel);
+                InitializeLabelDetails(panel);
+            }
+            
         }
 
         private void InitializeLabelUserName(Panel panel)
@@ -94,6 +98,7 @@ namespace StandartsClient
             UserName.Name = "userNameLabel";
             UserName.AutoSize = true;
             UserName.Text = UserProfile.Login;
+            UserName.TabIndex = 1;
             panel.Controls.Add(UserName);
         }
 
@@ -106,6 +111,7 @@ namespace StandartsClient
             FindText.Name = "findTextLabel";
             FindText.AutoSize = true;
             FindText.Text = "Поиск";
+            FindText.TabIndex = 2;
             panel.Controls.Add(FindText);
         }
 
@@ -118,6 +124,7 @@ namespace StandartsClient
             FindTextBox.MaximumSize = new System.Drawing.Size(this.MaximumWidth - leftIndent, panel.Height - bottomIndent);
             FindTextBox.Font = new System.Drawing.Font("Times New Roman", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             FindTextBox.Text = this.FindPattern;
+            FindTextBox.TabIndex = 3;
             panel.Controls.Add(FindTextBox);
         }
 
@@ -130,21 +137,51 @@ namespace StandartsClient
             FindButton.MaximumSize = new System.Drawing.Size(this.MaximumWidth - leftIndent, panel.Height - bottomIndent);
             FindButton.Font = new System.Drawing.Font("Times New Roman", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             FindButton.Text = "Поиск";
+            FindButton.TabIndex = 4;
             FindButton.Click += new EventHandler(this.Search_Click);
             panel.Controls.Add(FindButton);
+        }
+
+        private void InitializeClearResultSearchButton(Panel panel)
+        {
+            ClearResultSearch = new Button();
+            ClearResultSearch.Location = new System.Drawing.Point(FindButton.Location.X + FindButton.Size.Width + 3, UserName != null ? UserName.Location.Y + UserName.Size.Height + 5 : 10);
+            ClearResultSearch.Name = "clearButton";
+            ClearResultSearch.Size = new System.Drawing.Size(100, 25);
+            ClearResultSearch.MaximumSize = new System.Drawing.Size(this.MaximumWidth - leftIndent, panel.Height - bottomIndent);
+            ClearResultSearch.Font = new System.Drawing.Font("Times New Roman", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ClearResultSearch.Text = "\u2716";
+            ClearResultSearch.TabIndex = 10;
+            ClearResultSearch.Click += new EventHandler(this.ClearSearch_Click);
+            panel.Controls.Add(ClearResultSearch);
+        }
+
+        private void InitializeLabelEmptyResult(Panel panel)
+        {
+            EmptyResult = new Label();
+            EmptyResult.Location = new System.Drawing.Point(10, FindButton != null ? FindButton.Location.Y + FindButton.Size.Height + 5 : 40);
+            EmptyResult.MaximumSize = new System.Drawing.Size(this.MaximumWidth - leftIndent, panel.Height - bottomIndent);
+            EmptyResult.Font = new System.Drawing.Font("Times New Roman", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            EmptyResult.Name = "emptyResultLabel";
+            EmptyResult.AutoSize = true;
+            EmptyResult.Text = "Ничего не найдено!";
+            EmptyResult.TabIndex = 11;
+            panel.Controls.Add(EmptyResult);
         }
 
         private void InitializeLabelTypeName(Panel panel, DisplayStandartModel standartModel = null)
         {
             if (IsAddedTypeName)
             {
+                var coordinateY = standartModel != null ? standartModel.Details.Location.Y + standartModel.Details.Height + 15 : FindTextBox.Location.Y + FindTextBox.Size.Height + 15;
                 TypeName = new Label();
-                TypeName.Location = new System.Drawing.Point(10, standartModel != null ? UserName.Location.Y + UserName.Size.Height + 15 : FindTextBox.Location.Y + FindTextBox.Size.Height + 15);
+                TypeName.Location = new System.Drawing.Point(10, coordinateY);
                 TypeName.MaximumSize = new System.Drawing.Size(this.MaximumWidth - leftIndent, panel.Height - bottomIndent);
                 TypeName.Font = new System.Drawing.Font("Times New Roman", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 TypeName.Name = "typeNameLabel";
                 TypeName.AutoSize = true;
                 TypeName.Text = typeName;
+                TypeName.TabIndex = 5;
                 panel.Controls.Add(TypeName);
             }
         }
@@ -170,7 +207,8 @@ namespace StandartsClient
             Header.Font = new System.Drawing.Font("Times New Roman", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             Header.Name = "headerLabel";
             Header.AutoSize = true;
-            Header.Text = Standart.Header;
+            Header.Text = Standart?.Header;
+            Header.TabIndex = 6;
             panel.Controls.Add(Header);
         }
 
@@ -185,20 +223,10 @@ namespace StandartsClient
             AddToFavorite.UseVisualStyleBackColor = true;
             AddToFavorite.Text = "Избранное";
             AddToFavorite.Checked = IsAddedToFavorite;
+            AddToFavorite.TabIndex = 7;
+            AddToFavorite.Click += new EventHandler(this.AddStandartToFavorite);
             panel.Controls.Add(AddToFavorite);
         }
-
-        //private void InitializeLabelDisplayDetails(Panel panel)
-        //{
-        //    DisplayDetails = new Label();
-        //    DisplayDetails.Location = new System.Drawing.Point(10, AddToFavorite.Location.Y + 5 + AddToFavorite.Size.Height);
-        //    DisplayDetails.MaximumSize = new System.Drawing.Size(panel.Width - leftIndent, panel.Height - bottomIndent);
-        //    DisplayDetails.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-        //    DisplayDetails.Name = "displayDetailsLabel";
-        //    DisplayDetails.AutoSize = true;
-        //    DisplayDetails.Text = "\u25B6 Подробнее";
-        //    panel.Controls.Add(DisplayDetails);
-        //}
 
         private void InitializeLabelDetails(Panel panel)
         {
@@ -208,49 +236,35 @@ namespace StandartsClient
             Details.MaximumSize = new System.Drawing.Size(this.MaximumWidth - leftIndent, panel.Height - bottomIndent);
             Details.Font = new System.Drawing.Font("Times New Roman", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             Details.AutoSize = true;
-            Details.Text = "Подробнее:\n" + Standart.Details;
+            Details.Text = "Подробнее:\n" + Standart?.Details;
+            Details.TabIndex = 8;
             panel.Controls.Add(Details);
-        }
-
-        private void ResizeLabelHeader(int panelWidth, int panelHeight, DisplayStandartModel standartModel = null)
-        {
-            Header.MaximumSize = new System.Drawing.Size(panelWidth - leftIndent, panelHeight - bottomIndent);
-            Header.Location = new System.Drawing.Point(10, standartModel != null ? standartModel.Details.Location.Y + standartModel.Details.Size.Height + 15 : FindTextBox.Location.Y + FindTextBox.Size.Height + 15);
-        }
-
-        private void ResizeCheckBoxAddToFavorite(int panelWidth, int panelHeight)
-        {
-            AddToFavorite.MaximumSize = new System.Drawing.Size(panelWidth - leftIndent, panelHeight - bottomIndent);
-            AddToFavorite.Location = new System.Drawing.Point(12, Header.Location.Y + 5 + Header.Size.Height);
-        }
-
-        //private void ResizeLabelDisplayDetails(Panel panel)
-        //{
-        //    DisplayDetails.MaximumSize = new System.Drawing.Size(panel.Width - leftIndent, panel.Height - bottomIndent);
-        //    DisplayDetails.Location = new System.Drawing.Point(10, AddToFavorite.Location.Y + 5 + AddToFavorite.Size.Height);
-        //}
-
-        private void ResizeLabelDetails(int panelWidth, int panelHeight)
-        {
-            Details.MaximumSize = new System.Drawing.Size(panelWidth - leftIndent, panelHeight - bottomIndent);
-            Details.Location = new System.Drawing.Point(10, AddToFavorite.Location.Y + 5 + AddToFavorite.Size.Height);
         }
 
         private async void AddStandartToFavorite(object sender, EventArgs e)
         {
             if (AddToFavorite.Checked)
             {
-                await userService.AddStandartToFavorites(UserProfile.Id, Id);
+                await userService.AddStandartToFavorites(UserProfile.Id, Id.Value);
             }
             else
             {
-                await userService.DeleteStandartFromFavorites(UserProfile.Id, Id);
+                await userService.DeleteStandartFromFavorites(UserProfile.Id, Id.Value);
             }
         }
 
         private void Search_Click(object sender, EventArgs e)
         {
             this.Search.Search(FindTextBox.Text);
+        }
+
+        private void ClearSearch_Click(object sender, EventArgs e)
+        {
+            this.Search.ClearResultSearch();
+            if(FindTextBox != null)
+            {
+                FindTextBox.Text = string.Empty;
+            }
         }
     }
 }

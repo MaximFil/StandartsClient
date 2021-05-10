@@ -49,6 +49,7 @@ namespace StandartsClient
             this.Controls.Add(this.panel1);
             this.Name = "User";
             this.Text = "Кабинет пользователя";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.User_FormClosed);
             this.Load += new System.EventHandler(this.User_Load);
             this.Resize += new System.EventHandler(this.User_Resize);
             this.ResumeLayout(false);

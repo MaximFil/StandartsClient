@@ -30,15 +30,23 @@ namespace StandartsClient
 
         private void User_Load(object sender, EventArgs e)
         {
+            panel1?.Controls.Clear();
             LinkedListNode<DisplayStandartModel> linkedListNode = null;
-            foreach (var standart in FavoriteStandarts)
+            if(FavoriteStandarts != null && FavoriteStandarts.Any())
             {
-                var addTypeName = true;
-                foreach(var item in standart.Value)
+                foreach (var standart in FavoriteStandarts)
                 {
-                    linkedListNode = DisplayStandartModel.AddLast(new DisplayStandartModel(new Standart { Id = item.StandartId, Details = item.StandartDetails, Header = item.StandartHeader}, panel1, true, linkedListNode?.Value, true, addTypeName, item.StandartTypeName, search: this));
-                    addTypeName = false;
+                    var addTypeName = true;
+                    foreach(var item in standart.Value)
+                    {
+                        linkedListNode = DisplayStandartModel.AddLast(new DisplayStandartModel(new Standart { Id = item.StandartId, Details = item.StandartDetails, Header = item.StandartHeader}, panel1, true, linkedListNode?.Value, true, addTypeName, item.StandartTypeName, search: this));
+                        addTypeName = false;
+                    }
                 }
+            }
+            else
+            {
+                new DisplayStandartModel(null, panel1, false, isUserForm: true, search: this);
             }
         }
 
@@ -59,14 +67,49 @@ namespace StandartsClient
             panel1.Controls.Clear();
             this.ResultSearchFavoriteStandarts = FavoriteStandarts.SelectMany(s => s.Value).Where(s => s.StandartHeader.IndexOf(findText, StringComparison.InvariantCultureIgnoreCase) >= 0).GroupBy(s => s.StandartTypeName).ToDictionary(s => s.Key, s => s.ToList());
             LinkedListNode<DisplayStandartModel> linkedListNode = null;
-            foreach (var standart in ResultSearchFavoriteStandarts)
+            if(ResultSearchFavoriteStandarts != null && ResultSearchFavoriteStandarts.Any())
             {
-                var addTypeName = true;
-                foreach (var item in standart.Value)
+                foreach (var standart in ResultSearchFavoriteStandarts)
                 {
-                    linkedListNode = DisplayStandartModel.AddLast(new DisplayStandartModel(new Standart { Id = item.StandartId, Details = item.StandartDetails, Header = item.StandartHeader }, panel1, true, linkedListNode?.Value, true, addTypeName, item.StandartTypeName, search: this, findPattern: findText));
-                    addTypeName = false;
+                    var addTypeName = true;
+                    foreach (var item in standart.Value)
+                    {
+                        linkedListNode = DisplayStandartModel.AddLast(new DisplayStandartModel(new Standart { Id = item.StandartId, Details = item.StandartDetails, Header = item.StandartHeader }, panel1, true, linkedListNode?.Value, true, addTypeName, item.StandartTypeName, search: this, findPattern: findText));
+                        addTypeName = false;
+                    }
                 }
+            }
+            else
+            {
+                new DisplayStandartModel(null, panel1, false, isUserForm: true, search: this);
+            }
+        }
+
+        private void User_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            var menu = new Menu();
+            menu.Show();
+        }
+
+        public void ClearResultSearch()
+        {
+            panel1?.Controls.Clear();
+            LinkedListNode<DisplayStandartModel> linkedListNode = null;
+            if (FavoriteStandarts != null && FavoriteStandarts.Any())
+            {
+                foreach (var standart in FavoriteStandarts)
+                {
+                    var addTypeName = true;
+                    foreach (var item in standart.Value)
+                    {
+                        linkedListNode = DisplayStandartModel.AddLast(new DisplayStandartModel(new Standart { Id = item.StandartId, Details = item.StandartDetails, Header = item.StandartHeader }, panel1, true, linkedListNode?.Value, true, addTypeName, item.StandartTypeName, search: this));
+                        addTypeName = false;
+                    }
+                }
+            }
+            else
+            {
+                new DisplayStandartModel(null, panel1, false, isUserForm: true, search: this);
             }
         }
     }

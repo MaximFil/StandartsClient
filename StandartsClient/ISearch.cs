@@ -9,5 +9,7 @@ namespace StandartsClient
     public interface ISearch
     {
         void Search(string pattern);
+
+        void ClearResultSearch();
     }
 }

@@ -37,6 +37,7 @@ namespace StandartsClient
 
         private void button5_Click(object sender, EventArgs e)
         {
+            dispose = false;
             var belForm = new StandartsForm(StandartTypesEnum.Rus);
             belForm.Show();
             this.Close();
@@ -44,6 +45,7 @@ namespace StandartsClient
 
         private void button6_Click(object sender, EventArgs e)
         {
+            dispose = false;
             var belForm = new StandartsForm(StandartTypesEnum.Inter);
             belForm.Show();
             this.Close();
@@ -53,12 +55,13 @@ namespace StandartsClient
         {
             if (dispose)
             {
-                //Application.Exit();
+                Application.Exit();
             }
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
+            dispose = false;
             var user = new User();
             user.Show();
             this.Close();

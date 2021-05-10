@@ -39,28 +39,46 @@ namespace StandartsClient
                 : this.standartService.GetStandartsByTypeId(standartTypeModel.Id).GetAwaiter().GetResult();
             this.Text = standartTypeModel.StandartTypeName;
             this.DisplayStandartModel = new LinkedList<DisplayStandartModel>();
+            this.ResultDisplayStandartModel = new LinkedList<DisplayStandartModel>();
             this.FavoriteStandarts = standartService.GetFavoriteStandarts(UserProfile.Id).GetAwaiter().GetResult();
         }
 
         public void Search(string findText)
         {
-            panel1.Controls.Clear();
+            panel1?.Controls.Clear();
             this.ResultSearch = Standarts.Where(s => s.Value.Header.IndexOf(findText, StringComparison.InvariantCultureIgnoreCase) >= 0).ToDictionary(s => s.Key, s => s.Value);
             LinkedListNode<DisplayStandartModel> linkedListNode = null;
-            foreach (var standart in ResultSearch)
+            if(this.ResultSearch != null && this.ResultSearch.Any())
             {
-                var cheked = this.FavoriteStandarts.ContainsKey(standart.Key);
-                linkedListNode = DisplayStandartModel.AddLast(new DisplayStandartModel(standart.Value, panel1, cheked, linkedListNode?.Value, findPattern: findText, search: this));
+                foreach (var standart in ResultSearch)
+                {
+                    var cheked = this.FavoriteStandarts.ContainsKey(standart.Key);
+                    linkedListNode = ResultDisplayStandartModel.AddLast(new DisplayStandartModel(standart.Value, panel1, cheked, linkedListNode?.Value, findPattern: findText, search: this));
+                }
             }
+            else
+            {
+                new DisplayStandartModel(null, panel1, false, search: this);
+            }
+
+            ResultDisplayStandartModel = new LinkedList<DisplayStandartModel>();
         }
 
         private void BelStandart_Load(object sender, EventArgs e)
         {
+            panel1?.Controls.Clear();
             LinkedListNode<DisplayStandartModel> linkedListNode = null;
-            foreach(var standart in Standarts)
+            if(Standarts != null && Standarts.Any())
             {
-                var cheked = this.FavoriteStandarts.ContainsKey(standart.Key);
-                linkedListNode = DisplayStandartModel.AddLast(new DisplayStandartModel(standart.Value, panel1, cheked, linkedListNode?.Value, search: this));
+                foreach(var standart in Standarts)
+                {
+                    var cheked = this.FavoriteStandarts.ContainsKey(standart.Key);
+                    linkedListNode = DisplayStandartModel.AddLast(new DisplayStandartModel(standart.Value, panel1, cheked, linkedListNode?.Value, search: this));
+                }
+            }
+            else
+            {
+                new DisplayStandartModel(null, panel1, false, search: this);
             }
         }
 
@@ -80,7 +98,24 @@ namespace StandartsClient
         {
             var menu = new Menu();
             menu.Show();
-            this.Close();
+        }
+
+        public void ClearResultSearch()
+        {
+            panel1?.Controls.Clear();
+            LinkedListNode<DisplayStandartModel> linkedListNode = null;
+            if (Standarts != null && Standarts.Any())
+            {
+                foreach (var standart in Standarts)
+                {
+                    var cheked = this.FavoriteStandarts.ContainsKey(standart.Key);
+                    linkedListNode = DisplayStandartModel.AddLast(new DisplayStandartModel(standart.Value, panel1, cheked, linkedListNode?.Value, search: this));
+                }
+            }
+            else
+            {
+                new DisplayStandartModel(null, panel1, false, search: this);
+            }
         }
     }
 }
