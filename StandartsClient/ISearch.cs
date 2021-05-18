@@ -11,5 +11,7 @@ namespace StandartsClient
         void Search(string pattern);
 
         void ClearResultSearch();
+
+        void Back();
     }
 }

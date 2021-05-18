@@ -29,7 +29,9 @@ namespace StandartsClient
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // panel1
@@ -41,6 +43,11 @@ namespace StandartsClient
             this.panel1.Size = new System.Drawing.Size(800, 450);
             this.panel1.TabIndex = 0;
             // 
+            // timer1
+            // 
+            this.timer1.Interval = 350;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // User
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -51,7 +58,6 @@ namespace StandartsClient
             this.Text = "Кабинет пользователя";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.User_FormClosed);
             this.Load += new System.EventHandler(this.User_Load);
-            this.Resize += new System.EventHandler(this.User_Resize);
             this.ResumeLayout(false);
 
         }
@@ -59,5 +65,6 @@ namespace StandartsClient
         #endregion
 
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Timer timer1;
     }
 }

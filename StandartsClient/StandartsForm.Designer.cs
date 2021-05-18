@@ -29,8 +29,15 @@ namespace StandartsClient
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
             this.SuspendLayout();
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 350;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // panel1
             // 
@@ -38,26 +45,25 @@ namespace StandartsClient
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(457, 450);
+            this.panel1.Size = new System.Drawing.Size(800, 450);
             this.panel1.TabIndex = 0;
             // 
             // StandartsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(457, 450);
+            this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.panel1);
             this.Name = "StandartsForm";
             this.Text = "Cтандарты";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.StandartsForm_FormClosed);
             this.Load += new System.EventHandler(this.BelStandart_Load);
-            this.Resize += new System.EventHandler(this.BelStandart_Resize);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
+        private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Panel panel1;
     }
 }

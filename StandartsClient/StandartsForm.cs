@@ -16,9 +16,6 @@ namespace StandartsClient
     public partial class StandartsForm : Form, ISearch
     {
         private readonly StandartService standartService;
-        private readonly UserService userService;
-
-        private LinkedList<DisplayStandartModel> ResultDisplayStandartModel { get; set; }
         private LinkedList<DisplayStandartModel> DisplayStandartModel { get; set; }
 
         private Dictionary<int, Standart> Standarts { get; set; }
@@ -39,7 +36,6 @@ namespace StandartsClient
                 : this.standartService.GetStandartsByTypeId(standartTypeModel.Id).GetAwaiter().GetResult();
             this.Text = standartTypeModel.StandartTypeName;
             this.DisplayStandartModel = new LinkedList<DisplayStandartModel>();
-            this.ResultDisplayStandartModel = new LinkedList<DisplayStandartModel>();
             this.FavoriteStandarts = standartService.GetFavoriteStandarts(UserProfile.Id).GetAwaiter().GetResult();
         }
 
@@ -47,28 +43,29 @@ namespace StandartsClient
         {
             panel1?.Controls.Clear();
             this.ResultSearch = Standarts.Where(s => s.Value.Header.IndexOf(findText, StringComparison.InvariantCultureIgnoreCase) >= 0).ToDictionary(s => s.Key, s => s.Value);
+            this.DisplayStandartModel = new LinkedList<DisplayStandartModel>();
             LinkedListNode<DisplayStandartModel> linkedListNode = null;
             if(this.ResultSearch != null && this.ResultSearch.Any())
             {
                 foreach (var standart in ResultSearch)
                 {
                     var cheked = this.FavoriteStandarts.ContainsKey(standart.Key);
-                    linkedListNode = ResultDisplayStandartModel.AddLast(new DisplayStandartModel(standart.Value, panel1, cheked, linkedListNode?.Value, findPattern: findText, search: this));
+                    linkedListNode = DisplayStandartModel.AddLast(new DisplayStandartModel(standart.Value, panel1, cheked, linkedListNode?.Value, findPattern: findText, search: this));
                 }
             }
             else
             {
-                new DisplayStandartModel(null, panel1, false, search: this);
+                new DisplayStandartModel(null, panel1, false, search: this, findPattern: findText);
             }
-
-            ResultDisplayStandartModel = new LinkedList<DisplayStandartModel>();
         }
 
         private void BelStandart_Load(object sender, EventArgs e)
         {
+            timer1.Start();
             panel1?.Controls.Clear();
             LinkedListNode<DisplayStandartModel> linkedListNode = null;
-            if(Standarts != null && Standarts.Any())
+            this.DisplayStandartModel = new LinkedList<DisplayStandartModel>();
+            if (Standarts != null && Standarts.Any())
             {
                 foreach(var standart in Standarts)
                 {
@@ -82,16 +79,9 @@ namespace StandartsClient
             }
         }
 
-        private void BelStandart_Resize(object sender, EventArgs e)
+        public void Back()
         {
-            var linkedListNode = DisplayStandartModel?.First;
-            while(linkedListNode != null)
-            {
-                var width = panel1.Width;
-                var height = panel1.Height;
-                //linkedListNode?.Value?.ChangeFormSize(width, height, linkedListNode?.Previous?.Value);
-                linkedListNode = linkedListNode?.Next;
-            }
+            this.Close();
         }
 
         private void StandartsForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -102,8 +92,10 @@ namespace StandartsClient
 
         public void ClearResultSearch()
         {
+            timer1.Stop();
             panel1?.Controls.Clear();
             LinkedListNode<DisplayStandartModel> linkedListNode = null;
+            this.DisplayStandartModel = new LinkedList<DisplayStandartModel>();
             if (Standarts != null && Standarts.Any())
             {
                 foreach (var standart in Standarts)
@@ -115,6 +107,19 @@ namespace StandartsClient
             else
             {
                 new DisplayStandartModel(null, panel1, false, search: this);
+            }
+            timer1.Start();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            var linkedListNode = DisplayStandartModel?.First;
+            while (linkedListNode != null)
+            {
+                var width = panel1.Width;
+                var height = panel1.Height;
+                linkedListNode?.Value?.ChangeFormSize(width, height, linkedListNode?.Previous?.Value);
+                linkedListNode = linkedListNode?.Next;
             }
         }
     }
