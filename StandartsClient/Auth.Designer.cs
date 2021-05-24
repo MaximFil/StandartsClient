@@ -130,6 +130,7 @@ namespace StandartsClient
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button1);
             this.Name = "Auth";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Вход";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);

@@ -55,6 +55,7 @@ namespace StandartsClient
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.panel1);
             this.Name = "StandartsForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Cтандарты";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.StandartsForm_FormClosed);
             this.Load += new System.EventHandler(this.BelStandart_Load);
